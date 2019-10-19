@@ -1,0 +1,15 @@
+query RepositoryQuery ($user: String!){
+  user (login: $user) {
+    repositories (first:20){
+      edges {
+        node {
+          description
+          name
+          pullRequests {
+            totalCount
+          }
+        }
+      }
+    }
+  }
+}
