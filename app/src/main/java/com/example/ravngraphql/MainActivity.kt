@@ -17,7 +17,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         var userFragment = UserSearchFragment()
-        getSupportFragmentManager().beginTransaction().add(R.id.frameContainer, userFragment);
+        //getSupportFragmentManager().beginTransaction().add(R.id.frameContainer, userFragment);
         getUsers()
     }
 
@@ -52,6 +52,8 @@ class MainActivity : AppCompatActivity() {
             override fun onFailure(e: ApolloException) {
                 Log.d("TAG",e.message.toString())
             }
+
+
         })
     }
 }
