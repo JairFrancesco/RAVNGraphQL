@@ -1,0 +1,15 @@
+query {
+  user (login:"jairfrancesco") {
+    repositories (first:20){
+      edges {
+        node {
+          description
+          name
+          pullRequests {
+            totalCount
+          }
+        }
+      }
+    }
+  }
+}

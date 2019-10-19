@@ -1,0 +1,14 @@
+query {
+  search (type: USER, query:"jair", first:20) {
+    edges {
+      node {
+        ... on User {
+          avatarUrl
+          location
+          login
+          name
+        }
+      }
+    }
+  }
+}
