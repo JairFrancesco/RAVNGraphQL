@@ -11,18 +11,14 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.apollographql.apollo.ApolloCall
 import com.apollographql.apollo.ravn.UserQuery
-import kotlinx.android.synthetic.main.fragment_user_search.*
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.apollographql.apollo.api.Response
 import com.apollographql.apollo.exception.ApolloException
-import kotlinx.android.synthetic.main.activity_main.*
-import okhttp3.internal.notify
-import java.util.logging.Logger
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -36,7 +32,8 @@ class UserSearchFragment : Fragment() {
     private var listener: OnFragmentInteractionListener? = null
     private lateinit var viewOfLayout: View
     private var listUsers:MutableList<User> = ArrayList()
-    private var mAdapter:UsersAdapter = UsersAdapter()
+    private var mAdapter: UsersAdapter =
+        UsersAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,6 +67,13 @@ class UserSearchFragment : Fragment() {
             val querySearch = editTextUser.text.toString()
             getUsers(querySearch)
         }
+
+
+        val btnFrag2 = viewOfLayout.findViewById<Button>(R.id.btnFrag2) // to open Fragment details
+        btnFrag2.setOnClickListener {
+            onItemUserClick()
+        }
+
 
         //getUsers(" ") //Show first 20 demonstrative
         return viewOfLayout
@@ -149,5 +153,20 @@ class UserSearchFragment : Fragment() {
 
         })
     }
-    
+
+    fun onItemUserClick(){
+        val newReposFragment = UserRepositoriesFragment()
+        val arguments = Bundle()
+        arguments.putString("user_login", "jairfrancesco")
+        newReposFragment.arguments =  arguments
+        val fragmentTransaction = activity!!.supportFragmentManager.beginTransaction()
+
+        fragmentTransaction.replace(
+            R.id.frameContainer,
+            newReposFragment
+        )
+        fragmentTransaction.addToBackStack(null)
+        fragmentTransaction.commit()
+    }
+
 }

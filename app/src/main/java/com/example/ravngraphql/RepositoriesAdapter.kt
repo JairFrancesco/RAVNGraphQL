@@ -1,5 +1,4 @@
 package com.example.ravngraphql
-
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -8,8 +7,8 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import android.widget.Toast
 
-class RepositoriesAdapter :  RecyclerView.Adapter<RepositoriesAdapter.ViewHolder>() {
 
+class RepositoriesAdapter :  RecyclerView.Adapter<RepositoriesAdapter.ViewHolder>() {
 
     var repos: MutableList<Repository>  = ArrayList()
     lateinit var context: Context
@@ -48,7 +47,4 @@ class RepositoriesAdapter :  RecyclerView.Adapter<RepositoriesAdapter.ViewHolder
             })
         }
     }
-
-
-
 }

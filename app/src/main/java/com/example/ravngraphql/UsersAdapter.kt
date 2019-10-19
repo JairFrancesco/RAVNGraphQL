@@ -42,7 +42,12 @@ class UsersAdapter :  RecyclerView.Adapter<UsersAdapter.ViewHolder>() {
         fun bind(user:User, context: Context){
             userNameLocation.text = user.name + "," +  user.location
             userLogin.text = user.location
-            itemView.setOnClickListener(View.OnClickListener { Toast.makeText(context, user.name, Toast.LENGTH_SHORT).show() })
+            itemView.setOnClickListener(View.OnClickListener {
+                Toast.makeText(context, user.name, Toast.LENGTH_SHORT).show()
+
+
+
+            })
             userAvatar.loadUrl(user.avatar_url)
         }
         fun ImageView.loadUrl(url: String) {
