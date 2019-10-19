@@ -50,6 +50,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onFailure(e: ApolloException) {
+                e.printStackTrace();
                 Log.d("TAG",e.message.toString())
             }
 
