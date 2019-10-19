@@ -1,0 +1,1 @@
+apollo schema:download --endpoint=https://api.github.com/graphql --header="Authorization: Bearer <token>"
