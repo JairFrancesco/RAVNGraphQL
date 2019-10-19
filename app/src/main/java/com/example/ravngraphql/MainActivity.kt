@@ -3,8 +3,14 @@ package com.example.ravngraphql
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.apollographql.apollo.ravn.RepositoryQuery
 
 
+data class Repository(
+    var name:String,
+    var description:String,
+    var pullRequestsCount: String
+)
 
 data class User(
     var name:String,
