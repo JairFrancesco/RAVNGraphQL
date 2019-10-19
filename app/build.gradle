@@ -21,7 +21,22 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            buildConfigField 'String', "github_apiKey", github_ApiKey
+            resValue 'string', "github_apiKey", github_ApiKey
         }
+        debug {
+            buildConfigField 'String', "github_apiKey", github_ApiKey
+            resValue 'string', "github_apiKey", github_ApiKey
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+    }
+
+    kotlinOptions {
+        jvmTarget = "1.8"
     }
 }
 
@@ -42,5 +57,6 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     compileOnly 'org.jetbrains:annotations:13.0'
     testCompileOnly 'org.jetbrains:annotations:13.0'
+    implementation 'de.hdodenhof:circleimageview:3.0.1'
 
 }
