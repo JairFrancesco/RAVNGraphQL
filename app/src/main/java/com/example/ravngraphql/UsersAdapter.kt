@@ -9,7 +9,7 @@ import android.widget.ImageView
 import android.widget.Toast
 import com.squareup.picasso.Picasso;
 
-class UsersAdapter :  RecyclerView.Adapter<UsersAdapter.ViewHolder>() {
+class UsersAdapter(val clickListener: (User) -> Unit) :  RecyclerView.Adapter<UsersAdapter.ViewHolder>() {
 
 
     var users: MutableList<User>  = ArrayList()
@@ -22,7 +22,8 @@ class UsersAdapter :  RecyclerView.Adapter<UsersAdapter.ViewHolder>() {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = users.get(position)
-        holder.bind(item, context)
+        holder.bind(item, context, clickListener)
+        (holder as ViewHolder).bind(users[position], context, clickListener)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -34,25 +35,27 @@ class UsersAdapter :  RecyclerView.Adapter<UsersAdapter.ViewHolder>() {
         return users.size
     }
 
+
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val userNameLocation = view.findViewById(R.id.txtNameLocation) as TextView
         val userLogin = view.findViewById(R.id.txtLogin) as TextView
         val userAvatar = view.findViewById(R.id.ivUserAvatar) as ImageView
 
-        fun bind(user:User, context: Context){
+        fun bind(user:User, context: Context, clickListener: (User) -> Unit){
             userNameLocation.text = user.name + "," +  user.location
             userLogin.text = user.location
+            itemView.setOnClickListener { clickListener(user)}
+            /*
             itemView.setOnClickListener(View.OnClickListener {
                 Toast.makeText(context, user.name, Toast.LENGTH_SHORT).show()
-
-
-
             })
+            */
             userAvatar.loadUrl(user.avatar_url)
         }
         fun ImageView.loadUrl(url: String) {
             Picasso.with(context).load(url).into(this)
         }
+
     }
 
 }

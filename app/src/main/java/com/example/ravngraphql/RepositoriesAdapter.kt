@@ -42,6 +42,7 @@ class RepositoriesAdapter :  RecyclerView.Adapter<RepositoriesAdapter.ViewHolder
         fun bind(repo: Repository, context: Context){
             repoName.text = repo.name
             repoDescription.text = repo.description
+            repoPrCount.text = repo.pullRequestsCount
             itemView.setOnClickListener(View.OnClickListener {
                 Toast.makeText(context, repo.name, Toast.LENGTH_SHORT).show()
             })

@@ -18,6 +18,9 @@ import android.widget.ImageButton
 import androidx.recyclerview.widget.RecyclerView
 import com.apollographql.apollo.api.Response
 import com.apollographql.apollo.exception.ApolloException
+import android.widget.TextView
+
+
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -32,8 +35,7 @@ class UserSearchFragment : Fragment() {
     private var listener: OnFragmentInteractionListener? = null
     private lateinit var viewOfLayout: View
     private var listUsers:MutableList<User> = ArrayList()
-    private var mAdapter: UsersAdapter =
-        UsersAdapter()
+    private lateinit var mAdapter: UsersAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,7 +52,7 @@ class UserSearchFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         viewOfLayout = inflater.inflate(R.layout.fragment_user_search, container, false)
-        mAdapter = UsersAdapter()
+        mAdapter = UsersAdapter({ userItem : User -> onItemUserClick(userItem) })
         mAdapter.UsersAdapter(listUsers, activity!!.applicationContext)
 
         //recyclerview
@@ -69,13 +71,14 @@ class UserSearchFragment : Fragment() {
         }
 
 
+        /*
         val btnFrag2 = viewOfLayout.findViewById<Button>(R.id.btnFrag2) // to open Fragment details
         btnFrag2.setOnClickListener {
             onItemUserClick()
         }
+        */
 
-
-        //getUsers(" ") //Show first 20 demonstrative
+        getUsers(" ") //Show first 20 demonstrative
         return viewOfLayout
     }
 
@@ -139,6 +142,19 @@ class UserSearchFragment : Fragment() {
 
                 // onResponse returns on a background thread. If you want to make UI updates make sure they are done on the Main Thread.
                 activity?.runOnUiThread {
+                    //emptyview
+                    var emptyView = viewOfLayout.findViewById(R.id.emptyView) as TextView
+                    var RecycleUsers = viewOfLayout.findViewById(R.id.lrvUsers) as RecyclerView
+
+                    if (listUsers.isEmpty()) {
+                        RecycleUsers.setVisibility(View.GONE);
+                        emptyView.setVisibility(View.VISIBLE);
+                    }
+                    else {
+                        RecycleUsers.setVisibility(View.VISIBLE);
+                        emptyView.setVisibility(View.GONE);
+                    }
+
                     mAdapter.notifyDataSetChanged()
 
                 }
@@ -154,10 +170,10 @@ class UserSearchFragment : Fragment() {
         })
     }
 
-    fun onItemUserClick(){
+    fun onItemUserClick(user: User){
         val newReposFragment = UserRepositoriesFragment()
         val arguments = Bundle()
-        arguments.putString("user_login", "jairfrancesco")
+        arguments.putString("user_login", user.login)
         newReposFragment.arguments =  arguments
         val fragmentTransaction = activity!!.supportFragmentManager.beginTransaction()
 

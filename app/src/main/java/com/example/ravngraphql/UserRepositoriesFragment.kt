@@ -134,12 +134,26 @@ class UserRepositoriesFragment : Fragment() {
                     var item = it.node()
 
                     if (item is RepositoryQuery.Node) { //item is automatically cast to User
-                            listRepos.add(Repository(item.name(), item.description().toString(), item.pullRequests().toString()))
+                            listRepos.add(Repository(item.name(), item.description().toString(), item.pullRequests().totalCount().toString()))
                     }
                 }
 
                 // onResponse returns on a background thread. If you want to make UI updates make sure they are done on the Main Thread.
                 activity?.runOnUiThread {
+
+                    //emptyview
+                    var emptyView = viewOfLayout.findViewById(R.id.emptyView) as TextView
+                    var RecycleRepos = viewOfLayout.findViewById(R.id.lrvRepos) as RecyclerView
+
+                    if (listRepos.isEmpty()) {
+                        RecycleRepos.setVisibility(View.GONE);
+                        emptyView.setVisibility(View.VISIBLE);
+                    }
+                    else {
+                        RecycleRepos.setVisibility(View.VISIBLE);
+                        emptyView.setVisibility(View.GONE);
+                    }
+
                     mAdapter.notifyDataSetChanged()
                 }
             }
