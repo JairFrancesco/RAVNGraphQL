@@ -1,9 +1,9 @@
 # RAVNGraphQL
 RAVN GraphQL Code Challenge
 
-## Programming envinronment
+## Programming environment
 1. Language programming: Kotlin
-2. IDE: Android Studio
+2. IDE: Android Studio 3.5.1
 
 # Instructions to running the App
 ## Add a github api token
@@ -14,4 +14,17 @@ RAVN GraphQL Code Challenge
 github_ApiKey="YOUR API KEY"
 
 ```
+# Screenshots
 
+## Home (Empty state) 
+![home](Screenshots/start_app.png)
+
+## User Search
+![home](Screenshots/search_user.png)
+
+## Load More Users (Pagination)
+![home](Screenshots/pagination.png)
+
+
+## User's Repositories
+![home](Screenshots/repositories.png)
