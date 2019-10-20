@@ -18,6 +18,6 @@ github_ApiKey="YOUR API KEY"
 
 
 | Home (Empty state)   | User Search | Load More Users (Pagination) | User's Repositories |
-| ------------- | ------------- | ------------- | 
-| ![home](Screenshots/start_app.png) | ![home](Screenshots/search_user.png)  | ![home](Screenshots/pagination.png) | ![home](Screenshots/repositories.png) |
+| ------------- | ------------- | ------------- | ------------- | 
+| ![home](Screenshots/start_app.png) | ![search_user](Screenshots/search_user.png)  | ![pagination](Screenshots/pagination.png) | ![repositores](Screenshots/repositories.png) |
 
