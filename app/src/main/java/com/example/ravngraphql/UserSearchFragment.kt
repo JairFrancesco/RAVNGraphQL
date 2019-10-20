@@ -12,34 +12,31 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.apollographql.apollo.ApolloCall
 import com.apollographql.apollo.ravn.UserQuery
 import android.util.Log
-import android.widget.Button
 import android.widget.EditText
-import android.widget.ImageButton
 import androidx.recyclerview.widget.RecyclerView
 import com.apollographql.apollo.api.Response
 import com.apollographql.apollo.exception.ApolloException
 import android.widget.TextView
-import android.R.string.cancel
 import android.text.Editable
 import android.text.TextWatcher
 import java.util.Timer
 import java.util.TimerTask
+import android.os.Handler
+import com.apollographql.apollo.ravn.UserNextQuery
 
-
-
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
-class UserSearchFragment : Fragment() {
-    // TODO: Rename and change types of parameters
+class UserSearchFragment : Fragment(), InfiniteScrollListener.OnLoadMoreListener, InfiniteScrollListener.isLoadingListener {
     private var param1: String? = null
     private var param2: String? = null
     private var listener: OnFragmentInteractionListener? = null
     private lateinit var viewOfLayout: View
-    private var listUsers:MutableList<User> = ArrayList()
+    private var listUsers:MutableList<User?> = ArrayList()
     private lateinit var mAdapter: UsersAdapter
+    var infiniteScrollListener: InfiniteScrollListener? = null
+    private var afterCursor:String? = null //Necessary for loading more (on scroll)
+    private var isLoadingRecycler = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,30 +58,18 @@ class UserSearchFragment : Fragment() {
 
         //recyclerview
         var RecycleUsers = viewOfLayout.findViewById(R.id.lrvUsers) as RecyclerView
-        RecycleUsers.layoutManager = LinearLayoutManager(this.context)
+
+        val manager = LinearLayoutManager(this.context)
+        var infiniteScrollListener = InfiniteScrollListener(manager, this, this)
+
+        RecycleUsers.layoutManager = manager
+        RecycleUsers.addOnScrollListener(infiniteScrollListener)
         RecycleUsers.adapter = mAdapter
         RecycleUsers.addItemDecoration(
             DividerItemDecoration(activity!!.applicationContext, DividerItemDecoration.VERTICAL)
         )
 
-        /*
-        val btnSearch = viewOfLayout.findViewById<ImageButton>(R.id.btnSearch) // to trigger search
-        btnSearch.setOnClickListener {
-            val editTextUser = viewOfLayout.findViewById<EditText>(R.id.editTextUser)
-            val querySearch = editTextUser.text.toString()
-            getUsers(querySearch)
-        }
-        */
-
-        /*
-        val btnFrag2 = viewOfLayout.findViewById<Button>(R.id.btnFrag2) // to open Fragment details
-        btnFrag2.setOnClickListener {
-            onItemUserClick()
-        }
-        */
-
         val valEditSearch = viewOfLayout.findViewById<EditText>(R.id.editTextUser)
-
         valEditSearch.addTextChangedListener(
             object : TextWatcher {
 
@@ -104,8 +89,7 @@ class UserSearchFragment : Fragment() {
                     timer.schedule(
                         object : TimerTask() {
                             override fun run() {
-                                // TODO: do what you need here (refresh list)
-                                // you will probably need to use runOnUiThread(Runnable action) for some specific actions
+                                //Refresh the list
                                 val editTextUser = viewOfLayout.findViewById<EditText>(R.id.editTextUser)
                                 val querySearch = editTextUser.text.toString()
                                 getUsers(querySearch)
@@ -116,12 +100,10 @@ class UserSearchFragment : Fragment() {
                 }
             }
         )
-
-        getUsers(" ") //Show first 20 demonstrative
+        getUsers(" ") //Show no results
         return viewOfLayout
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
     fun onButtonPressed(uri: Uri) {
         listener?.onFragmentInteraction(uri)
     }
@@ -141,12 +123,10 @@ class UserSearchFragment : Fragment() {
     }
 
     interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         fun onFragmentInteraction(uri: Uri)
     }
 
     companion object {
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
             UserSearchFragment().apply {
@@ -165,12 +145,10 @@ class UserSearchFragment : Fragment() {
                 .query(querySearch)
                 .build()
         ).enqueue(object : ApolloCall.Callback<UserQuery.Data>() {
-
             override fun onResponse(dataResponse: Response<UserQuery.Data>) {
-
                 listUsers.clear() //clear list
                 val users = dataResponse.data()?.search()?.edges()
-
+                afterCursor = dataResponse.data()?.search()?.pageInfo()?.endCursor().toString()
                 users!!.forEach {
                     var item = it.node()
 
@@ -178,7 +156,6 @@ class UserSearchFragment : Fragment() {
                         listUsers.add(User(item.name().toString(), item.avatarUrl(), item.location().toString(), item.login().toString()))
                     }
                 }
-
                 // onResponse returns on a background thread. If you want to make UI updates make sure they are done on the Main Thread.
                 activity?.runOnUiThread {
                     //emptyview
@@ -193,16 +170,13 @@ class UserSearchFragment : Fragment() {
                         RecycleUsers.setVisibility(View.VISIBLE);
                         emptyView.setVisibility(View.GONE);
                     }
-
-                    mAdapter.notifyDataSetChanged()
-
+                    mAdapter.notifyDataSetChanged() //Notify change
                 }
-
             }
 
             override fun onFailure(e: ApolloException) {
-                e.printStackTrace();
-                Log.d("TAG",e.message.toString())
+                //e.printStackTrace();
+                Log.d("TAG ERROR HTTP",e.message.toString())
             }
 
 
@@ -212,7 +186,7 @@ class UserSearchFragment : Fragment() {
     fun onItemUserClick(user: User){
         val newReposFragment = UserRepositoriesFragment()
         val arguments = Bundle()
-        arguments.putString("user_login", user.login)
+        arguments.putString("user_login", user?.login)
         newReposFragment.arguments =  arguments
         val fragmentTransaction = activity!!.supportFragmentManager.beginTransaction()
 
@@ -222,6 +196,55 @@ class UserSearchFragment : Fragment() {
         )
         fragmentTransaction.addToBackStack(null)
         fragmentTransaction.commit()
+    }
+
+    override fun isLoading(): Boolean {
+        return isLoadingRecycler
+    }
+
+    override fun onLoadMore() {
+        var RecycleUsers = viewOfLayout.findViewById(R.id.lrvUsers) as RecyclerView
+        RecycleUsers.post{
+            listUsers.add(null)
+            mAdapter.notifyItemInserted(listUsers.size - 1)
+        }
+
+        val editTextUser = viewOfLayout.findViewById<EditText>(R.id.editTextUser)
+        val querySearch = editTextUser.text.toString()
+        Handler().postDelayed({
+            mAdapter.removeNull()
+            // Get next 10 users
+            myApolloClient.myApolloClient.query(
+                UserNextQuery.builder()
+                    .query(querySearch)
+                    .afterCursor(afterCursor.toString())
+                    .build()
+            ).enqueue(object : ApolloCall.Callback<UserNextQuery.Data>() {
+                override fun onResponse(dataResponse: Response<UserNextQuery.Data>) {
+                    val users = dataResponse.data()?.search()?.edges()
+                    afterCursor = dataResponse.data()?.search()?.pageInfo()?.endCursor().toString()
+                    users!!.forEach {
+                        var item = it.node()
+
+                        if (item is UserNextQuery.AsUser) { //item is automatically cast to User
+                            listUsers.add(User(item.name().toString(), item.avatarUrl(), item.location().toString(), item.login().toString()))
+                        }
+                    }
+                    // onResponse returns on a background thread. If you want to make UI updates make sure they are done on the Main Thread.
+                    activity?.runOnUiThread {
+                        Log.d("FINISHED", "FINISHED LOAD MORE")
+                        mAdapter.notifyDataSetChanged()
+                        isLoadingRecycler = false
+                    }
+                }
+                override fun onFailure(e: ApolloException) {
+                    //e.printStackTrace();
+                    Log.d("TAG",e.message.toString())
+                }
+            })
+        }, 2000);
+
+        isLoadingRecycler = true
     }
 
 }

@@ -1,5 +1,10 @@
 query UserQuery($query: String!){
-  search (type: USER, query:$query, first:20) {
+  search (type: USER, query:$query, first:10) {
+    pageInfo {
+      startCursor
+      hasNextPage
+      endCursor
+    }
     edges {
       node {
         ... on User {

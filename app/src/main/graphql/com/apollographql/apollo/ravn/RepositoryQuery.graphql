@@ -1,6 +1,6 @@
 query RepositoryQuery ($user: String!){
   user (login: $user) {
-    repositories (first:20){
+    repositories (first:15){
       edges {
         node {
           description
