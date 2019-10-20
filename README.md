@@ -23,4 +23,4 @@ github_ApiKey="YOUR API KEY"
 
 # architecture/design pattern
 
-![design_pattern](Screenshots/mvc_diagram.png)
+![design_pattern](Screenshots/mvc_diagram.jpeg)
