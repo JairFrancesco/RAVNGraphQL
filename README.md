@@ -21,3 +21,6 @@ github_ApiKey="YOUR API KEY"
 | ------------- | ------------- | ------------- | ------------- | 
 | ![home](Screenshots/start_app.png) | ![search_user](Screenshots/search_user.png)  | ![pagination](Screenshots/pagination.png) | ![repositores](Screenshots/repositories.png) |
 
+# architecture/design pattern
+
+![design_pattern](Screenshots/mvc_diagram.png)
