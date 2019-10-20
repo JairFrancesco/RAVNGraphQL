@@ -19,7 +19,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.apollographql.apollo.api.Response
 import com.apollographql.apollo.exception.ApolloException
 import android.widget.TextView
-
+import android.R.string.cancel
+import android.text.Editable
+import android.text.TextWatcher
+import java.util.Timer
+import java.util.TimerTask
 
 
 
@@ -63,13 +67,14 @@ class UserSearchFragment : Fragment() {
             DividerItemDecoration(activity!!.applicationContext, DividerItemDecoration.VERTICAL)
         )
 
+        /*
         val btnSearch = viewOfLayout.findViewById<ImageButton>(R.id.btnSearch) // to trigger search
         btnSearch.setOnClickListener {
             val editTextUser = viewOfLayout.findViewById<EditText>(R.id.editTextUser)
             val querySearch = editTextUser.text.toString()
             getUsers(querySearch)
         }
-
+        */
 
         /*
         val btnFrag2 = viewOfLayout.findViewById<Button>(R.id.btnFrag2) // to open Fragment details
@@ -77,6 +82,40 @@ class UserSearchFragment : Fragment() {
             onItemUserClick()
         }
         */
+
+        val valEditSearch = viewOfLayout.findViewById<EditText>(R.id.editTextUser)
+
+        valEditSearch.addTextChangedListener(
+            object : TextWatcher {
+
+                private var timer = Timer()
+                private val DELAY: Long = 1000 // milliseconds
+                override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
+                override fun beforeTextChanged(
+                    s: CharSequence,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+                }
+                override fun afterTextChanged(s: Editable) {
+                    timer.cancel()
+                    timer = Timer()
+                    timer.schedule(
+                        object : TimerTask() {
+                            override fun run() {
+                                // TODO: do what you need here (refresh list)
+                                // you will probably need to use runOnUiThread(Runnable action) for some specific actions
+                                val editTextUser = viewOfLayout.findViewById<EditText>(R.id.editTextUser)
+                                val querySearch = editTextUser.text.toString()
+                                getUsers(querySearch)
+                            }
+                        },
+                        DELAY
+                    )
+                }
+            }
+        )
 
         getUsers(" ") //Show first 20 demonstrative
         return viewOfLayout
