@@ -232,7 +232,6 @@ class UserSearchFragment : Fragment(), InfiniteScrollListener.OnLoadMoreListener
                     }
                     // onResponse returns on a background thread. If you want to make UI updates make sure they are done on the Main Thread.
                     activity?.runOnUiThread {
-                        Log.d("FINISHED", "FINISHED LOAD MORE")
                         mAdapter.notifyDataSetChanged()
                         isLoadingRecycler = false
                     }
@@ -242,7 +241,7 @@ class UserSearchFragment : Fragment(), InfiniteScrollListener.OnLoadMoreListener
                     Log.d("TAG",e.message.toString())
                 }
             })
-        }, 2000);
+        }, 2000)
 
         isLoadingRecycler = true
     }

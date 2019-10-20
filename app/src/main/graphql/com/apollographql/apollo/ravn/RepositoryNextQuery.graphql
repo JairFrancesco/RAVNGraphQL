@@ -1,6 +1,6 @@
-query RepositoryQuery ($user: String!){
+query RepositoryNextQuery ($user: String!, $afterCursor: String!){
   user (login: $user) {
-    repositories (first:10){
+    repositories (first:10, after: $afterCursor){
       pageInfo {
         startCursor
         hasNextPage
