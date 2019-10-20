@@ -1,6 +1,4 @@
 <resources>
     <string name="app_name">Github Ravn App</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="no_data_available">No results</string>
 </resources>

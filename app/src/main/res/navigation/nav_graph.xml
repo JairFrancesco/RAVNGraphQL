@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/userSearchFragment">
+    <fragment
+        android:id="@+id/userRepositoriesFragment"
+        android:name="com.example.ravngraphql.UserRepositoriesFragment"
+        android:label="fragment_user_repositories"
+        tools:layout="@layout/fragment_user_repositories" >
+        <action
+            android:id="@+id/action_userRepositoriesFragment_to_userSearchFragment"
+            app:destination="@id/userSearchFragment" />
+        <argument
+            android:name="user_login"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/userSearchFragment"
+        android:name="com.example.ravngraphql.UserSearchFragment"
+        android:label="fragment_user_search"
+        tools:layout="@layout/fragment_user_search" >
+        <action
+            android:id="@+id/action_userSearchFragment_to_userRepositoriesFragment"
+            app:destination="@id/userRepositoriesFragment" />
+    </fragment>
+</navigation>

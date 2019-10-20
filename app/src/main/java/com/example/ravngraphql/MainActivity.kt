@@ -1,9 +1,7 @@
 package com.example.ravngraphql
 
-import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.apollographql.apollo.ravn.RepositoryQuery
 
 
 data class Repository(
@@ -20,24 +18,12 @@ data class User(
 )
 
 
-class MainActivity : AppCompatActivity(), UserSearchFragment.OnFragmentInteractionListener, UserRepositoriesFragment.OnFragmentInteractionListener {
+class MainActivity : AppCompatActivity(){
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        var userFragment = UserSearchFragment()
-        getSupportFragmentManager().beginTransaction().add(R.id.frameContainer, userFragment);
-
-        val transition = supportFragmentManager.beginTransaction()
-        transition.replace(
-            R.id.frameContainer,
-            userFragment
-        )
-        transition.commit()
-
     }
 
-    override fun onFragmentInteraction(uri: Uri) {}
 }

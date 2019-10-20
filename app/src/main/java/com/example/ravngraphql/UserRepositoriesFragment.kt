@@ -11,6 +11,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -34,6 +36,7 @@ class UserRepositoriesFragment : Fragment(), InfiniteScrollListener.OnLoadMoreLi
     private var afterCursor:String? = null //Necessary for loading more (on scroll)
     private var isLoadingRecycler = false
     private var user_login:String? = null
+    val args: UserRepositoriesFragmentArgs by navArgs()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,17 +51,16 @@ class UserRepositoriesFragment : Fragment(), InfiniteScrollListener.OnLoadMoreLi
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-
-        val arguments = arguments
-        user_login = arguments!!.getString("user_login")
-
         viewOfLayout = inflater.inflate(R.layout.fragment_user_repositories, container, false)
+        user_login = args.userLogin
+
+
         val txtUsername = viewOfLayout.findViewById<TextView>(R.id.txtUsername) // to trigger search
         txtUsername.text = user_login
 
         val btnBack = viewOfLayout.findViewById<Button>(R.id.btnBack) // to trigger search
         btnBack.setOnClickListener {
-            onBackClick()
+            onBackClick(it)
         }
 
 
@@ -87,11 +89,6 @@ class UserRepositoriesFragment : Fragment(), InfiniteScrollListener.OnLoadMoreLi
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is OnFragmentInteractionListener) {
-            listener = context
-        } else {
-            throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
-        }
     }
 
     override fun onDetach() {
@@ -158,16 +155,9 @@ class UserRepositoriesFragment : Fragment(), InfiniteScrollListener.OnLoadMoreLi
         })
     }
 
-    fun onBackClick(){
-        val userSearchFragment = UserSearchFragment()
-        val fragmentTransaction = activity!!.supportFragmentManager.beginTransaction()
-
-        fragmentTransaction.replace(
-            R.id.frameContainer,
-            userSearchFragment
-        )
-        fragmentTransaction.addToBackStack(null)
-        fragmentTransaction.commit()
+    fun onBackClick(view: View){
+        val action = UserRepositoriesFragmentDirections.actionUserRepositoriesFragmentToUserSearchFragment()
+        view.findNavController().navigate(action)
     }
 
 

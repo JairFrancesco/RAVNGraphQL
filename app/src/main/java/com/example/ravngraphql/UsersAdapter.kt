@@ -9,7 +9,7 @@ import android.widget.ImageView
 import com.squareup.picasso.Picasso;
 
 
-class UsersAdapter(val clickListener: (User) -> Unit) :  RecyclerView.Adapter<UsersAdapter.CustomViewHolder>() {
+class UsersAdapter(val clickListener: (View, User) -> Unit) :  RecyclerView.Adapter<UsersAdapter.CustomViewHolder>() {
 
     private val VIEW_TYPE_ITEM = 0
     private val VIEW_TYPE_LOADING = 1
@@ -60,11 +60,12 @@ class UsersAdapter(val clickListener: (User) -> Unit) :  RecyclerView.Adapter<Us
         val userNameLocation = view.findViewById(R.id.txtNameLocation) as TextView
         val userLogin = view.findViewById(R.id.txtLogin) as TextView
         val userAvatar = view.findViewById(R.id.ivUserAvatar) as ImageView
+        val viewItem = view
 
-        fun bind(user:User?, clickListener: (User) -> Unit){
+        fun bind(user:User?, clickListener: (View, User) -> Unit){
             userNameLocation.text = user?.name + ", " +  user?.location
             userLogin.text = user?.login
-            itemView.setOnClickListener { clickListener(user!!)} //Click listener
+            itemView.setOnClickListener { clickListener(viewItem, user!!)} //Click listener
             userAvatar.loadUrl(user?.avatar_url.toString())
         }
         fun ImageView.loadUrl(url: String) {

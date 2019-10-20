@@ -6,6 +6,8 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
+apply plugin: "androidx.navigation.safeargs.kotlin"
+
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
@@ -40,6 +42,10 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
+    androidExtensions {
+        experimental = true
+    }
 }
 
 repositories {
@@ -48,7 +54,7 @@ repositories {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.core:core-ktx:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
@@ -56,6 +62,7 @@ dependencies {
     implementation 'com.apollographql.apollo:apollo-runtime:1.0.1-SNAPSHOT'
     implementation 'com.squareup.okhttp3:okhttp:3.0.1'
     implementation("com.squareup.okhttp3:logging-interceptor:4.2.1")
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
@@ -65,11 +72,19 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.5.2'
     implementation 'com.android.support:design:27.1.1'
 
+    def nav_version = "2.1.0-rc01"
+    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
+    // For Kotlin use navigation-fragment-ktx
+    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
+    // For Kotlin use navigation-ui-ktx
+
+    def material_version = "1.1.0-alpha07"
+    implementation "com.google.android.material:material:$material_version"
 }
 
 
 apollo {
     customTypeMapping = [
-            "URI" : "java.lang.String"
+            "URI": "java.lang.String"
     ]
 }

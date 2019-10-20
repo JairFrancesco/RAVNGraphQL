@@ -22,6 +22,8 @@ import android.text.TextWatcher
 import java.util.Timer
 import java.util.TimerTask
 import android.os.Handler
+import androidx.navigation.Navigation
+import androidx.navigation.findNavController
 import com.apollographql.apollo.ravn.UserNextQuery
 
 private const val ARG_PARAM1 = "param1"
@@ -53,7 +55,7 @@ class UserSearchFragment : Fragment(), InfiniteScrollListener.OnLoadMoreListener
     ): View? {
         // Inflate the layout for this fragment
         viewOfLayout = inflater.inflate(R.layout.fragment_user_search, container, false)
-        mAdapter = UsersAdapter({ userItem : User -> onItemUserClick(userItem) })
+        mAdapter = UsersAdapter({ itemView:View, userItem : User -> onItemUserClick(itemView, userItem) })
         mAdapter.UsersAdapter(listUsers, activity!!.applicationContext)
 
         //recyclerview
@@ -110,11 +112,6 @@ class UserSearchFragment : Fragment(), InfiniteScrollListener.OnLoadMoreListener
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is OnFragmentInteractionListener) {
-            listener = context
-        } else {
-            throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
-        }
     }
 
     override fun onDetach() {
@@ -183,19 +180,17 @@ class UserSearchFragment : Fragment(), InfiniteScrollListener.OnLoadMoreListener
         })
     }
 
-    fun onItemUserClick(user: User){
+    fun onItemUserClick(view:View, user: User){
         val newReposFragment = UserRepositoriesFragment()
         val arguments = Bundle()
         arguments.putString("user_login", user?.login)
         newReposFragment.arguments =  arguments
-        val fragmentTransaction = activity!!.supportFragmentManager.beginTransaction()
 
-        fragmentTransaction.replace(
-            R.id.frameContainer,
-            newReposFragment
-        )
-        fragmentTransaction.addToBackStack(null)
-        fragmentTransaction.commit()
+        val userLogin = user?.login
+
+        val action = UserSearchFragmentDirections.actionUserSearchFragmentToUserRepositoriesFragment(userLogin)
+        view.findNavController().navigate(action)
+
     }
 
     override fun isLoading(): Boolean {
