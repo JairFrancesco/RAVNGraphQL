@@ -22,9 +22,9 @@ import android.text.TextWatcher
 import java.util.Timer
 import java.util.TimerTask
 import android.os.Handler
-import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import com.apollographql.apollo.ravn.UserNextQuery
+import com.example.ravngraphql.Model.myApolloClient
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
@@ -149,7 +149,7 @@ class UserSearchFragment : Fragment(), InfiniteScrollListener.OnLoadMoreListener
                 users!!.forEach {
                     var item = it.node()
 
-                    if (item is UserQuery.AsUser) { //item is automatically cast to User
+                    if (item is UserQuery.AsUser) { //item is automatically cast to user
                         listUsers.add(User(item.name().toString(), item.avatarUrl(), item.location().toString(), item.login().toString()))
                     }
                 }
@@ -221,7 +221,7 @@ class UserSearchFragment : Fragment(), InfiniteScrollListener.OnLoadMoreListener
                     users!!.forEach {
                         var item = it.node()
 
-                        if (item is UserNextQuery.AsUser) { //item is automatically cast to User
+                        if (item is UserNextQuery.AsUser) { //item is automatically cast to user
                             listUsers.add(User(item.name().toString(), item.avatarUrl(), item.location().toString(), item.login().toString()))
                         }
                     }

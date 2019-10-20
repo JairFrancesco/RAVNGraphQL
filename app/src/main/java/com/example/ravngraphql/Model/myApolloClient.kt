@@ -1,6 +1,7 @@
-package com.example.ravngraphql
+package com.example.ravngraphql.Model
 
 import com.apollographql.apollo.ApolloClient
+import com.example.ravngraphql.BuildConfig
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor
 
@@ -8,7 +9,8 @@ import okhttp3.logging.HttpLoggingInterceptor
 class myApolloClient {
     companion object {
         const val BASE_URL = "https://api.github.com/graphql"
-        val myApolloClient: ApolloClient = getApolloClient()
+        val myApolloClient: ApolloClient =
+            getApolloClient()
 
 
 

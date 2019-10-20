@@ -21,6 +21,7 @@ import com.apollographql.apollo.api.Response
 import com.apollographql.apollo.exception.ApolloException
 import com.apollographql.apollo.ravn.RepositoryQuery
 import com.apollographql.apollo.ravn.RepositoryNextQuery
+import com.example.ravngraphql.Model.myApolloClient
 
 
 private const val ARG_PARAM1 = "param1"
