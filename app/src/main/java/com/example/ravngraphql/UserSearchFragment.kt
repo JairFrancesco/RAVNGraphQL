@@ -217,6 +217,11 @@ class UserSearchFragment : Fragment(), InfiniteScrollListener.OnLoadMoreListener
             ).enqueue(object : ApolloCall.Callback<UserNextQuery.Data>() {
                 override fun onResponse(dataResponse: Response<UserNextQuery.Data>) {
                     val users = dataResponse.data()?.search()?.edges()
+
+                    if (users == null) {
+                        return
+                    }
+
                     afterCursor = dataResponse.data()?.search()?.pageInfo()?.endCursor().toString()
                     users!!.forEach {
                         var item = it.node()

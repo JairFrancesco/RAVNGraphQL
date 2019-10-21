@@ -172,7 +172,6 @@ class UserRepositoriesFragment : Fragment(), InfiniteScrollListener.OnLoadMoreLi
             listRepos.add(null)
             mAdapter.notifyItemInserted(listRepos.size - 1)
         }
-
         Handler().postDelayed({
             mAdapter.removeNull()
             // Get next 10 users
@@ -185,6 +184,11 @@ class UserRepositoriesFragment : Fragment(), InfiniteScrollListener.OnLoadMoreLi
                 override fun onResponse(dataResponse: Response<RepositoryNextQuery.Data>) {
                     val repositories = dataResponse.data()?.user()?.repositories()?.edges()
                     afterCursor = dataResponse.data()?.user()?.repositories()?.pageInfo()?.endCursor().toString()
+
+                    if (repositories == null) {
+                        return
+                    }
+
                     repositories!!.forEach {
                         var item = it.node()
 
